@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html ng-app="newsApp">
+<head>
+<meta charset="ISO-8859-1">
+<title>News</title>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="animate.css" />
+<link rel="stylesheet" href="project.css" />
+
+<script src="angular.min.js"></script>
+
+
+</head>
+<body ng-controller="newsController">
+<div class="loading" ng-hide="globalLoading">Loading&#8230;</div>
+	<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Top Git </a>
+
+								
+				
+			</div>
+			<label class="label label-primary pull-right" style="margin-top:10px; padding:10px;">
+				Showing {{(data.length >1)? data.length : 0}} repository results in {{filterObj}}
+			</button>
+		</div>
+		
+	</nav>
+
+	<div class="container-fluid" >
+
+		<div class="row" id="top">
+			
+			<div class="col-sm-12" id="bs-example-navbar-collapse-1">
+				<div class="collapsed navbar-toggle pull-left">
+						<div class="panel panel-default">
+						  <!-- Default panel contents -->
+						  <div class="panel-heading">Stars</div>
+						  <div class="panel-body">
+						    <div class="row">
+							    <div class="col-sm-1"><label>0</label></div>
+							    <div class="col-sm-9">
+							    <input class="" type="range" min ="100" max="1000" step ="100" value ="{{rating}}" ng-model="rating"/>
+							    </div>
+							    <div class="col-sm-2"><label>1000</label></div>
+						    </div>
+						    <div class="row text-center">
+						    <p>{{rating}}</p>
+						    </div>
+						  </div>
+						</div>
+					</div> 
+			</div>
+	
+
+			<!-- deals -->
+
+			<div class="col-sm-8 col-xs-12">
+				<div class="row">
+					<div class="col-sm-8 col-xs-9">
+	
+							<div class="form-group">
+								<label class="sr-only" for="News search">Search (By language) </label>
+								<div class="input-group">
+									<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+									<input type="text" class="form-control" id="exampleInputAmount" ng-model="filterObj"
+										placeholder="Search (By name)" ng-enter="chageLanguage()">
+								</div>
+							</div>
+							
+					</div>
+					<div class="col-sm-4 col-xs-3">
+					Press enter after typing
+					</div>
+				</div>
+			
+				
+				<div class="row">
+				  <label class="label label-info" ng-hide="!{{data.length ===0}}">No items to display</label>
+					<div class="col-sm-6 col-xs-12 " ng-repeat="new in data" ng-if="new.name !== undefined">
+						<ul class="media-list animated fadeIn">
+						  <li class="media">
+						    <div class="media-left">
+						      <a href="#">
+						        <img class="media-object" ng-src="{{new.owner.avatar_url}}" alt="avatar" style="width:64px;height:64px;">
+						      </a>
+						    </div>
+						    <div class="media-body">
+						      <h4 class="media-heading"><a href="{{new.html_url}}" target="_blank" class="text-capitalize">{{new.name}}</a></h4>
+						      <p>{{new.language}}</p>
+						      <p class="word">{{new.description}}</p>
+						      
+						    </div>
+						  </li>
+						</ul>
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			<div class="col-sm-4 col-xs-12 ">
+				<div class="collapse navbar-collapse">
+					
+					<div class="panel panel-default">
+					  <!-- Default panel contents -->
+					  <div class="panel-heading">Stars</div>
+					  <div class="panel-body">
+					    <div class="row">
+						    <div class="col-sm-1"><label>0</label></div>
+						    <div class="col-sm-8">
+						    <input class="" type="range" min ="100" max="1000" step ="100" value ="{{rating}}" ng-model="rating"/>
+						    </div>
+						    <div class="col-sm-3"><label>1000</label></div>
+					    </div>
+					    <div class="row text-center">
+					    <p>{{rating}}</p>
+					    </div>
+					  </div>
+					</div>
+				 
+
+				
+				</div>
+			</div>
+			
+		</div>
+
+	</div>
+	<script src="app.js"></script>
+	<script src="jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	
+	<script>
+	
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip();
+		
+		// create the back to top button
+		$('body').prepend('<a href="#" class="back-to-top">Back to Top</a>');
+
+		var amountScrolled = 300;
+
+		$(window).scroll(function() {
+			if ( $(window).scrollTop() > amountScrolled ) {
+				$('a.back-to-top').fadeIn('slow');
+			} else {
+				$('a.back-to-top').fadeOut('slow');
+			}
+		});
+
+		$('a.back-to-top, a.simple-back-to-top').click(function() {
+			$('html, body').animate({
+				scrollTop: 0
+			}, 700);
+			return false;
+		});
+	});
+	</script>
+</body>
+</html>
