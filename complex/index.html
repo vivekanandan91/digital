@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html ng-app="newsApp">
+<head>
+<meta charset="ISO-8859-1">
+<title>Home Tracker</title>
+<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="animate.css" />
+<link rel="stylesheet" href="project.css" />
+
+<script src="angular.min.js"></script>
+
+
+
+</head>
+<body ng-controller="newsController">
+<div class="loading" ng-hide="globalLoading">Loading&#8230;</div>
+	<nav class="navbar navbar-inverse">
+			<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Tracker</a>
+
+								
+				
+			</div>
+			<label class="label label-primary pull-right" style="margin-top:10px; padding:10px;">
+				Api hits : {{apihits}}
+			&nbsp;&nbsp;&nbsp;|| &nbsp;&nbsp;
+				Total parcels : {{data.length}} 
+			</label>
+			
+		</div>
+		
+	</nav>
+
+	<div class="container-fluid" >
+
+		<div class="row" id="top">
+			
+
+			<!-- deals -->
+
+			<div class="col-sm-7 col-xs-12">
+				<div class="row">
+					<div class="col-sm-12 col-xs-12">
+					<div class="row">
+						<div class="col-sm-8 col-xs-10">
+						<div class="form-group">
+							<label class="sr-only" for="News search">Search (By language) </label>
+							<div class="input-group">
+								<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+								<input type="text" class="form-control" id="exampleInputAmount" ng-model="filtertext"
+									placeholder="Search (By parce name,price,weight)" ng-enter="chageLanguage()">
+							</div>
+						</div>
+						</div>	
+						<div class="col-sm-4 col-xs-2">
+						<button class="btn btn-default sortMenu1" ng-click="sortByParcelValue()">&#8377; &nbsp;<span class=""  ng-class="{reverse: !reverse}"></span></button>
+						
+						</div>
+						</div>	
+						<div class="row">
+							<!-- div class="col-sm-6 col-xs-12 " ng-repeat="new in data" ng-if="new.name !== undefined"-->
+							<div class="col-sm-12 col-xs-12 " ng-repeat="new in data | filter : filtertext | orderBy : [ parcelValue ]" ng-if="new.name">
+							
+							<blockquote class="" ng-click="activeFeed($event,new)">
+							  <p><a href="#">{{new.name}}</a></p>
+							  <span class="pull-right hide" >{{new.weight}}</span>
+							  <span class="h5">&#8377;</span> <cite title="Source Title">{{new.price | number}}</cite>
+							</blockquote>
+							
+							
+						</div>
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			</div>
+			<div class="col-sm-5 col-xs-12 ">
+					<!-- details map -->
+						<div class="row" ng-show="productUpdates.name">
+							<div class="col-sm-6 col-xs-12">
+							  <div class="thumbnail">
+							      <img src="https://help.github.com/assets/images/help/profile/identicon.png" alt="no preview" style="width: 100px;">
+							        <p>Date : {{productUpdates.date | dateValue}}</p>
+							   </div>
+							
+							</div>
+							<div class="col-sm-6 col-xs-12">
+								<div class="panel panel-default">
+								  <!-- Default panel contents -->
+								  <div class="panel-heading word">{{productUpdates.name}}</div>
+								  								
+								  <!-- Table -->
+								  <table class="table">
+								   <tr>
+								   <td><span class="glyphicon glyphicon-shopping-cart"></span></td>
+								   <td>{{productUpdates.type}}</td>
+								   <td><span class="h5">&#8377;</span></td>
+								   <td>{{productUpdates.price | number}}</td>
+								   </tr>
+								   
+								   <tr>
+								   <td><span class="glyphicon glyphicon-scale"></span></td>
+								   <td>{{productUpdates.weight}}</td>
+								   <td><span class="glyphicon glyphicon-plus-sign"></span></td>
+								   <td>{{productUpdates.quantity}}</td>
+								   </tr>
+								   
+								   <tr>
+								   <td><span class="glyphicon glyphicon-book"></span></td>
+								   <td>{{productUpdates.type}}</td>
+								   <td><span class="glyphicon glyphicon-stop" id="colorBox" ></span></td>
+								   <td>Color</td>
+								   </tr>
+								  </table>
+								</div>
+								
+							</div>
+							
+							<div class="col-sm-12 col-xs-12 text-center label label-success">
+							
+								<label class="" role="alert" style="padding:10px">Current Location</label>
+								
+							</div>
+							
+							<div class="col-sm-12 col-xs-12" id="map_canvas" style="height:300px;margin-top:3px">Map</div>
+							
+							<div class="col-sm-8 col-sm-offset-2">
+								<div class="col-sm-6 col-xs-6">
+								<button class="btn btn-primary btn-block" ng-click="likeBtn(productUpdates.name)"><span class="glyphicon glyphicon-thumbs-up"></span>Like {{productUpdates.like}}</button>
+								</div>
+								<div class="col-sm-6 col-xs-6">
+									<span id="yj-share-button" ng-click="shareBtn()"></span>
+									</div>
+							</div>
+						
+						</div>
+					
+				</div>
+					
+		</div>
+
+	</div>
+	<script src="app.js"></script>
+	<script src="jquery.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	 <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAJbRFiuc8PuZkIJybXMIi4Hw86IUVKAsM">
+    </script>
+    
+    <script type="text/javascript" src="https://s0.assets-yammer.com/assets/platform_social_buttons.min.js"></script>
+<script type="text/javascript">yam.platform.yammerShare();</script>
+	<script>
+	
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip();
+		
+		
+		
+		// create the back to top button
+		$('body').prepend('<a href="#" class="back-to-top">Back to Top</a>');
+
+		var amountScrolled = 300;
+
+		$(window).scroll(function() {
+			if ( $(window).scrollTop() > amountScrolled ) {
+				$('a.back-to-top').fadeIn('slow');
+			} else {
+				$('a.back-to-top').fadeOut('slow');
+			}
+		});
+
+		$('a.back-to-top, a.simple-back-to-top').click(function() {
+			$('html, body').animate({
+				scrollTop: 0
+			}, 700);
+			return false;
+		});
+		 
+		//http://digitaluniversity.cognizant.e-box.co.in:8080/deploy/1480146490963_4015/#
+	});
+	</script>
+</body>
+</html>
